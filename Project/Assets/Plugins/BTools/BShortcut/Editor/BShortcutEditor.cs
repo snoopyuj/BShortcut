@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author	Wayne Su
  * @date	2018/02/09
  */
@@ -89,47 +89,40 @@ namespace BTools.BShortcut
         {
             List<BShortcutData.BShortcutDataInfo> dataInfoList = shortcutData.dataInfoList;
 
-            #region 添加物件
+            #region Add Shortcut
 
             Rect addObjFieldRect = new Rect(1f, 0f, (position.width - 2f), 20f);
             DrawBackgroundBox(addObjFieldRect, AddFieldColor);
 
             EditorGUILayout.BeginHorizontal();
             {
-                EditorGUIUtility.labelWidth = 100f;
-                newObject = EditorGUILayout.ObjectField("添加快捷物件", newObject, typeof(Object), true, GUILayout.Width(200f));
+                EditorGUIUtility.labelWidth = 115f;
+                newObject = EditorGUILayout.ObjectField("Drag anything here:", newObject, typeof(Object), true, GUILayout.Width(230f));
 
-                GUI.enabled = (newObject != null);
-
-                if (GUILayout.Button("添加", GUILayout.Width(50f)))
+                if (newObject != null && !dataInfoList.Exists(x => x.obj == newObject))
                 {
-                    if (!dataInfoList.Exists(x => x.obj == newObject))
+                    var firstEmptyIdx = dataInfoList.FindIndex(x => x.obj == null);
+                    var newDataInfo = new BShortcutData.BShortcutDataInfo(newObject);
+
+                    if (firstEmptyIdx < 0)
                     {
-                        int firstEmptyIdx = dataInfoList.FindIndex(x => x.obj == null);
-                        BShortcutData.BShortcutDataInfo newDataInfo = new BShortcutData.BShortcutDataInfo(newObject);
-
-                        if (firstEmptyIdx < 0)
-                        {
-                            dataInfoList.Add(newDataInfo);
-                        }
-                        else
-                        {
-                            dataInfoList[firstEmptyIdx] = newDataInfo;
-                        }
-
-                        EditorUtility.SetDirty(shortcutData);
+                        dataInfoList.Add(newDataInfo);
+                    }
+                    else
+                    {
+                        dataInfoList[firstEmptyIdx] = newDataInfo;
                     }
 
-                    newObject = null;
+                    EditorUtility.SetDirty(shortcutData);
                 }
 
-                GUI.enabled = true;
+                newObject = null;
             }
             EditorGUILayout.EndHorizontal();
 
-            #endregion 添加物件
+            #endregion Add Shortcut
 
-            #region 快捷清單
+            #region Show list
 
             Rect listFieldRect = new Rect(1f, 21f, (position.width - 2f), position.height);
             DrawBackgroundBox(listFieldRect, ListFieldColor);
@@ -137,9 +130,9 @@ namespace BTools.BShortcut
             EditorGUILayout.BeginHorizontal();
             {
                 EditorGUILayout.LabelField("[No.]", GUILayout.Width(40f));
-                EditorGUILayout.LabelField("[快捷名稱]", GUILayout.Width(100f));
+                EditorGUILayout.LabelField("[Name]", GUILayout.Width(100f));
                 EditorGUILayout.LabelField("", GUILayout.Width(5f));
-                EditorGUILayout.LabelField("[快捷物件]");
+                EditorGUILayout.LabelField("[Item]");
             }
             EditorGUILayout.EndHorizontal();
 
@@ -180,7 +173,7 @@ namespace BTools.BShortcut
                         {
                             EditorUtility.SetDirty(shortcutData);
                         }
-                        else if (GUILayout.Button("刪除", GUILayout.Width(50f)))
+                        else if (GUILayout.Button("X", GUILayout.Width(20f)))
                         {
                             deleteIdx = i;
                         }
@@ -197,7 +190,7 @@ namespace BTools.BShortcut
             }
             EditorGUILayout.EndScrollView();
 
-            #endregion 快捷清單
+            #endregion Show list
         }
 
         private void DrawBackgroundBox(Rect _rect, Color _color)

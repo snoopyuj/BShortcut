@@ -1,5 +1,12 @@
 # BShortcut
 
+The Unity tool for quickly selecting any object in the project.
+
+## Usage
+
+Simply drag and drop your frequently used project files into the field.
+You can add any file or even entire folders.
+
 ## Demo
 ---
 ![](./Demo.gif)
